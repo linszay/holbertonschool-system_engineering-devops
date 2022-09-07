@@ -1,2 +1,2 @@
 #!/bin/bash
-cat \\\*\\\\\'\"Best School\"\\\'\\\\\*\$\\\?\\\*\\\*\\\*\\\*\\\*\:\) > "Best School\n"
+touch \\\*\\\\\'\"Best School\"\\\'\\\\\*\$\\\?\\\*\\\*\\\*\\\*\\\*\:\) printf "Best School\n"
