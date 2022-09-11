@@ -3,5 +3,5 @@
 export bestschool="Best School"
 for bestschool in $bestschool
 do 
-	echo -n
+	echo bestschool | head -n 10
 done
