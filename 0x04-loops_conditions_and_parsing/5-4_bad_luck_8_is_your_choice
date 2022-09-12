@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#This script loops and prints different output for 4th, 8th, and other lines
+i=1
+if [ $i -le 10 ]
+then    echo "Best School"
+        i=$((i+1))
+elif [ $i -eq 4 ]
+then    echo "bad luck"
+else [ $i -eq 8 ]
+	echo "good luck"
+fi
+
+
