@@ -2,12 +2,12 @@
 #This script loops and prints different output for 4th, 8th, and other lines
 i=0
 while [ $i -lt 10 ];
-do     i=$((i+1))
+do i=$((i+1))
 if [ $i -eq 4 ];
-then    echo "bad luck"
+then echo "bad luck"
 elif [ $i -eq 8 ];
-then    echo "good luck"
+then echo "good luck"
 else
-	echo "Best School"
+echo "Best School"
 fi
 done
