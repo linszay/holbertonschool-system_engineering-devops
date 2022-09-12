@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#This script displays content of current dir in list format with partial names
+export i=pwd
+for i in directory/*; do
+        echo "$i" | find . -type f | cut -b '5-'
+done	
