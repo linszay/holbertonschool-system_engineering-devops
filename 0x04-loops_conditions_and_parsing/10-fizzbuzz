@@ -3,12 +3,12 @@
 export i=1
 for i in {1..100}; do
 	i=$((i++))
-        if (( i % 3 == 0 )); then
-        echo "Fizz"
+        if (( i % 15 == 0 )); then
+        echo "FizzBuzz"
+	elif (( i % 3 == 0 )); then
+        echo "Fizz"          
 	elif (( i % 5 == 0 )); then
-        echo "Buzz"          
-	elif (( i % 15 == 0 )); then
-	echo "FizzBuzz"
+	echo "Buzz"
 	else
 		echo "$i"
 fi
