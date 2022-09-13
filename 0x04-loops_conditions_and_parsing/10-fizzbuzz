@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #This script displays numbers from 1-100 and certain multiples have different outputs
-export i=0
+export i=1
 for i in {1..100}; do
 	echo "i"
 	i=$((i++))
