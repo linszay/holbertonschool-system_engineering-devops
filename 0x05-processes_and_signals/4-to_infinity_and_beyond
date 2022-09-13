@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#This script infinitely loops 'to infinity and beyond' with sleep between loops
+# shellcheck disable=SC2009
+while true; do
+	echo "To infinity and beyond"
+	sleep 2
+done
