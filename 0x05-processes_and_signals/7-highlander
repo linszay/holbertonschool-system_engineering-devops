@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #This script infinitely loops 'to infinity and beyond' with sleep between loops
 # shellcheck disable=SC2009
 trap echo "I am invincible!!!" SIGTERM
