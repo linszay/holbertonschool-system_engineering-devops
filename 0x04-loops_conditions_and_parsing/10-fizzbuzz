@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#This script displays numbers from 1-100 and certain multiples have different outputs
+export i=1
+while [[ $i -lt 100 ]]; do
+	i=$(i+1)
+	if (i%15); then
+		echo "FizzBuzz"
+fi
+	if (i%3); then
+		echo "Fizz"
+fi
+	if (i%5); then
+		echo "Buzz"
+fi
+done
