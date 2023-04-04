@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 """Retrieve and display an employee's TODO list progress"""
 import requests
-import sys
+from sys import argv
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: {} employee_id".format(sys.argv[0]))
+    if len(argv) != 2:
+        print("Usage: {} employee_id".format(argv[0]))
         exit(1)
 
-    employee_id = sys.argv[1]
+    employee_id = argv[1]
     url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
         employee_id)
     response = requests.get(url)
