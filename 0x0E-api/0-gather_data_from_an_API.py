@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Retrieve and display an employee's TODO list progress"""
 
-import requests
+import requests as req
 import sys
 
 
@@ -13,10 +13,10 @@ if __name__ == "__main__":
 
     # Retrieve employee information
     employee_id = sys.argv[1]
-    user_response = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                                 .format(employee_id))
-    todo_response = requests.get("https://jsonplaceholder.typicode.com/todos",
-                                 params={"userId": employee_id})
+    user_response = req.get("https://jsonplaceholder.typicode.com/users/{}"
+                            .format(employee_id))
+    todo_response = req.get("https://jsonplaceholder.typicode.com/todos",
+                            params={"userId": employee_id})
 
     # Check for request errors
     if user_response.status_code != 200:
