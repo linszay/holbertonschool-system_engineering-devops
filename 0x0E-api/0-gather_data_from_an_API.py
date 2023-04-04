@@ -1,45 +1,44 @@
 #!/usr/bin/python3
-"""doc"""
+"""Retrieve and display an employee's TODO list progress"""
+
 import requests
 import sys
-import urllib
-
-
-def get_employee_todo_progress(employee_id):
-    """doc"""
-    base_url = "https://jsonplaceholder.typicode.com"
-
-    user_response = requests.get("{}/users/{}"
-                                 .format(base_url, employee_id))
-    user_data = user_response.json()
-
-    if 'name' not in user_data:
-        print("Invalid employee ID")
-        return
-
-    todos_response = requests.get("{}/users/{}/todos"
-                                  .format(base_url, employee_id))
-    todos_data = todos_response.json()
-
-    done_tasks = [task for task in todos_data if task["completed"]]
-    total_tasks = len(todos_data)
-
-    print("Employee {} is done with tasks({}/{}): "
-          .format(user_data['name'], len(done_tasks), total_tasks))
-
-    for task in done_tasks:
-        print("\t", task["title"])
 
 
 if __name__ == "__main__":
+    # Check command line arguments
     if len(sys.argv) != 2:
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
+        print("Usage: {} employee_id".format(sys.argv[0]))
         sys.exit(1)
 
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Employee ID must be an integer")
+    # Retrieve employee information
+    employee_id = sys.argv[1]
+    user_response = requests.get("https://jsonplaceholder.typicode.com/users/{}"
+                                 .format(employee_id))
+    todo_response = requests.get("https://jsonplaceholder.typicode.com/todos",
+                                 params={"userId": employee_id})
+
+    # Check for request errors
+    if user_response.status_code != 200:
+        print("Error: User ID not found")
+        sys.exit(1)
+    if todo_response.status_code != 200:
+        print("Error: Could not retrieve TODO list")
         sys.exit(1)
 
-    get_employee_todo_progress(employee_id)
+    # Parse JSON responses
+    user_data = user_response.json()
+    todo_data = todo_response.json()
+
+    # Extract relevant data
+    employee_name = user_data["name"]
+    total_tasks = len(todo_data)
+    done_tasks = sum(1 for task in todo_data if task["completed"])
+    completed_titles = [task["title"]
+                        for task in todo_data if task["completed"]]
+
+    # Display TODO list progress
+    print("Employee {} is done with tasks({}/{}):".format(employee_name,
+          done_tasks, total_tasks))
+    for title in completed_titles:
+        print("\t {}".format(title))
