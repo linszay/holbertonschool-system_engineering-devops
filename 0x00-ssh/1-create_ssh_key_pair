@@ -5,3 +5,4 @@ KEY_BITS=4096
 KEY_PASSPHRASE="betty"
 
 ssh-keygen -t rsa -b $KEY_BITS -f $KEY_NAME -N "$KEY_PASSPHRASE"
+ 
