@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """extending script to export data in CSV format"""
+import csv
 import requests
 import sys
-import csv
 
 
 if __name__ == '__main__':
