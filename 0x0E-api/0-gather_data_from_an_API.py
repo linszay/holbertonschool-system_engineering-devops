@@ -1,44 +1,41 @@
 #!/usr/bin/python3
 """Retrieve and display an employee's TODO list progress"""
-
-import requests as req
+import requests
 import sys
 
 
-if __name__ == "__main__":
-    # Check command line arguments
+if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Usage: {} employee_id".format(sys.argv[0]))
-        sys.exit(1)
+        exit(1)
 
-    # Retrieve employee information
-    employee_id = int(sys.argv[1])
-    user_response = req.get("https://jsonplaceholder.typicode.com/users/{}"
-                            .format(employee_id))
-    todo_response = req.get("https://jsonplaceholder.typicode.com/todos",
-                            params={"userId": employee_id})
+    employee_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
+        employee_id)
+    response = requests.get(url)
 
-    # Check for request errors
-    if user_response.status_code != 200:
-        print("Error: User ID not found")
-        sys.exit(1)
-    if todo_response.status_code != 200:
-        print("Error: Could not retrieve TODO list")
-        sys.exit(1)
+    if response.status_code != 200:
+        print("Error: Request failed with status code {}".format(
+            response.status_code))
+        exit(1)
 
-    # Parse JSON responses
-    user_data = user_response.json()
-    todo_data = todo_response.json()
+    todos = response.json()
+    total_tasks = len(todos)
+    done_tasks = [todo for todo in todos if todo['completed']]
 
-    # Extract relevant data
-    employee_name = user_data['name']
-    total_tasks = len(todo_data)
-    done_tasks = sum(1 for task in todo_data if task['completed'])
-    completed_titles = [task['title']
-                        for task in todo_data if task['completed']]
+    employee_name_url = "https://jsonplaceholder.typicode.com/users/{}".format(
+        employee_id)
+    response_name = requests.get(employee_name_url)
 
-    # Display TODO list progress
-    print("Employee {} is done with tasks({}/{}):".format(employee_name,
-          done_tasks, total_tasks))
-    for title in completed_titles:
-        print("\t {}".format(title))
+    if response_name.status_code != 200:
+        print("Error: Request failed with status code {}".format(
+            response_name.status_code))
+        exit(1)
+
+    employee_name = response_name.json().get('name')
+
+    print("Employee {} is done with tasks({}/{}):".format(
+        employee_name, len(done_tasks), total_tasks))
+
+    for todo in done_tasks:
+        print("\t {} {}".format('\t', todo['title']))

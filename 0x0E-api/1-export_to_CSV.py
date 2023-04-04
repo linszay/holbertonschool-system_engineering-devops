@@ -1,50 +1,49 @@
 #!/usr/bin/python3
 """extending script to export data in CSV format"""
-import csv
 import requests
 import sys
-
-users_url = "https://jsonplaceholder.typicode.com/users"
-todos_url = "https://jsonplaceholder.typicode.com/todos"
+import csv
 
 
-def get_username(id):
-    """ Fetch user name """
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: {} employee_id".format(sys.argv[0]))
+        exit(1)
 
-    resp = requests.get(users_url).json()
+    employee_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
+        employee_id)
+    response = requests.get(url)
 
-    name = None
-    for i in resp:
-        if i['id'] == id:
-            name = i['username']
-            break
+    if response.status_code != 200:
+        print("Error: Request failed with status code {}".format(
+            response.status_code))
+        exit(1)
 
-    return name
+    todos = response.json()
+    employee_name_url = "https://jsonplaceholder.typicode.com/users/{}".format(
+        employee_id)
+    response_name = requests.get(employee_name_url)
 
+    if response_name.status_code != 200:
+        print("Error: Request failed with status code {}".format(
+            response_name.status_code))
+        exit(1)
 
-def export_to_csv(user_id):
-    """ Export user's tasks to CSV """
+    employee_name = response_name.json().get("username")
+    filename = "{}.csv".format(employee_id)
 
-    user_tasks = []
-    resp = requests.get(todos_url).json()
+    with open(filename, mode='w', newline='') as csvfile:
+        fieldnames = ['USER_ID', 'USERNAME',
+                      'TASK_COMPLETED_STATUS', 'TASK_TITLE']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames,
+                                quoting=csv.QUOTE_ALL)
 
-    for i in resp:
-        if i['userId'] == user_id:
-            user_tasks.append([user_id, get_username(
-                user_id), str(i['completed']), i['title']])
-
-    filename = f"{user_id}.csv"
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',',
-                            quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(
-            ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-        for row in user_tasks:
-            writer.writerow(row)
-
-    print(f"Exported {len(user_tasks)} tasks to {filename}")
-
-
-if __name__ == "__main__":
-    user_id = int(sys.argv[1])
-    export_to_csv(user_id)
+        for todo in todos:
+            completed_status = "True" if todo["completed"] else "False"
+            writer.writerow({
+                'USER_ID': employee_id,
+                'USERNAME': employee_name,
+                'TASK_COMPLETED_STATUS': completed_status,
+                'TASK_TITLE': todo["title"]
+            })
