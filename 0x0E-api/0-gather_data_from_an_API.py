@@ -31,11 +31,11 @@ if __name__ == "__main__":
     todo_data = todo_response.json()
 
     # Extract relevant data
-    employee_name = user_data["name"]
+    employee_name = user_data['name']
     total_tasks = len(todo_data)
-    done_tasks = sum(1 for task in todo_data if task["completed"])
-    completed_titles = [task["title"]
-                        for task in todo_data if task["completed"]]
+    done_tasks = sum(1 for task in todo_data if task['completed'])
+    completed_titles = [task['title']
+                        for task in todo_data if task['completed']]
 
     # Display TODO list progress
     print("Employee {} is done with tasks({}/{}):".format(employee_name,
