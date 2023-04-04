@@ -1,43 +1,45 @@
 #!/usr/bin/python3
-"""gets employee information about their TO DO list"""
-
+"""doc"""
 import requests
-from sys import argv, exit
+import sys
+import urllib
 
 
 def get_employee_todo_progress(employee_id):
-    """gets employee progress via their employee ID"""
-    baseurl = "https://jsonplaceholder.typicode.com"
+    """doc"""
+    base_url = "https://jsonplaceholder.typicode.com"
 
-    user_resp = requests.get("{}/users/{}".format(baseurl, employee_id))
-    userdata = user_resp.json()
+    user_response = requests.get("{}/users/{}"
+                                 .format(base_url, employee_id))
+    user_data = user_response.json()
 
-    if 'name' not in userdata:
+    if 'name' not in user_data:
         print("Invalid employee ID")
         return
 
-    todo_resp = requests.get("{}/users/{}/todos".format(baseurl, employee_id))
-    tododata = todo_resp.json()
+    todos_response = requests.get("{}/users/{}/todos"
+                                  .format(base_url, employee_id))
+    todos_data = todos_response.json()
 
-    completedtasks = [task for task in tododata if task["completed"]]
-    totaltasks = len(tododata)
+    done_tasks = [task for task in todos_data if task["completed"]]
+    total_tasks = len(todos_data)
 
     print("Employee {} is done with tasks({}/{}): "
-          .format(userdata['name'], len(completedtasks), totaltasks))
+          .format(user_data['name'], len(done_tasks), total_tasks))
 
-    for task in completedtasks:
+    for task in done_tasks:
         print("\t", task["title"])
 
 
 if __name__ == "__main__":
-    if len(argv) != 2:
+    if len(sys.argv) != 2:
         print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
-        exit(1)
+        sys.exit(1)
 
     try:
-        employee_id = int(argv[1])
+        employee_id = int(sys.argv[1])
     except ValueError:
         print("Employee ID must be an integer")
-        exit(1)
+        sys.exit(1)
 
     get_employee_todo_progress(employee_id)
