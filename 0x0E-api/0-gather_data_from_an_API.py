@@ -12,7 +12,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Retrieve employee information
-    employee_id = sys.argv[1]
+    employee_id = int(sys.argv[1])
     user_response = req.get("https://jsonplaceholder.typicode.com/users/{}"
                             .format(employee_id))
     todo_response = req.get("https://jsonplaceholder.typicode.com/todos",
