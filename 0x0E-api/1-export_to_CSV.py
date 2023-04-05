@@ -1,50 +1,54 @@
 #!/usr/bin/python3
-"""script exports data in CSV format"""
+"""Exports data in the CSV format"""
 import csv
 import requests
 import sys
 
-users_url = "https://jsonplaceholder.typicode.com/users"
-todos_url = "https://jsonplaceholder.typicode.com/todos"
+
+def get_employee_data(employee_id):
+    base_url = "https://jsonplaceholder.typicode.com"
+
+    user_response = requests.get("{}/users/{}"
+                                 .format(base_url, employee_id))
+    user_data = user_response.json()
+
+    if 'name' not in user_data:
+        print("Invalid employee ID")
+        return None, None
+
+    todos_response = requests.get("{}/users/{}/todos"
+                                  .format(base_url, employee_id))
+    todos_data = todos_response.json()
+
+    return user_data, todos_data
 
 
-def get_username(id):
-    """ Fetch user name """
+def export_to_csv(employee_id, user_data, todos_data):
+    """exports data in the CSV format"""
+    file_name = "{}.csv".format(employee_id)
 
-    resp = requests.get(users_url).json()
+    with open(file_name, "w", newline="") as csvfile:
+        csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
 
-    name = None
-    for i in resp:
-        if i['id'] == id:
-            name = i['username']
-            break
+        for task in todos_data:
+            csv_writer.writerow([employee_id, user_data["username"],
+                                 task["completed"], task["title"]])
 
-    return name
-
-
-def export_to_csv(user_id):
-    """ Export user's tasks to CSV """
-
-    user_tasks = []
-    resp = requests.get(todos_url).json()
-
-    for i in resp:
-        if i['userId'] == user_id:
-            user_tasks.append([user_id, get_username(
-                user_id), str(i['completed']), i['title']])
-
-    filename = f"{user_id}.csv"
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',',
-                            quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(
-            ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-        for row in user_tasks:
-            writer.writerow(row)
-
-    print("Exported {} tasks to {}".format(len(user_tasks), filename))
+    print("Data exported to {}".format(file_name))
 
 
 if __name__ == "__main__":
-    user_id = int(sys.argv[1])
-    export_to_csv(user_id)
+    if len(sys.argv) != 2:
+        print("Usage: python3 1-export_to_CSV.py <employee_id>")
+        sys.exit(1)
+
+    try:
+        employee_id = int(sys.argv[1])
+    except ValueError:
+        print("Employee ID must be an integer")
+        sys.exit(1)
+
+    user_data, todos_data = get_employee_data(employee_id)
+
+    if user_data and todos_data:
+        export_to_csv(employee_id, user_data, todos_data)
