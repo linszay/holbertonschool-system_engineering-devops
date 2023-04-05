@@ -42,7 +42,7 @@ def export_to_csv(user_id):
         for row in user_tasks:
             writer.writerow(row)
 
-    print(f"Exported {len(user_tasks)} tasks to {filename}")
+    print("Exported {} tasks to {}".format(len(user_tasks), filename))
 
 
 if __name__ == "__main__":

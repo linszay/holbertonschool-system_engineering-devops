@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """retrieve and display an employee's TODO list progress"""
-
 import requests as req
 import sys
 
