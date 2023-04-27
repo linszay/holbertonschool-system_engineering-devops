@@ -13,7 +13,7 @@ def export_employee_tasks_to_json(employee_id):
     user_resp = requests.get("{}/users/{}".format(baseurl, employee_id))
     userdata = user_resp.json()
 
-    if 'name' not in userdata:
+    if 'id' not in userdata or userdata['id'] != employee_id:
         print("Invalid employee ID")
         return
 
@@ -29,8 +29,9 @@ def export_employee_tasks_to_json(employee_id):
             "username": userdata["username"]
         })
 
-    with open(f"{employee_id}.json", "w") as f:
-        json.dump(employee_tasks, f)
+    if not isinstance(employee_tasks[str(employee_id)], list) or not all:
+        with open(f"{employee_id}.json", "w") as f:
+            json.dump(employee_tasks, f)
 
 
 if __name__ == "__main__":
