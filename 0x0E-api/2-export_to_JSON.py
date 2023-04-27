@@ -20,10 +20,10 @@ def export_employee_tasks_to_json(employee_id):
     todo_resp = requests.get("{}/users/{}/todos".format(baseurl, employee_id))
     tododata = todo_resp.json()
 
-    employee_tasks = {"USER_ID": []}
+    employee_tasks = {str(employee_id): []}
 
     for task in tododata:
-        employee_tasks["USER_ID"].append({
+        employee_tasks[str(employee_id)].append({
             "task": task["title"],
             "completed": task["completed"],
             "username": userdata["username"]
